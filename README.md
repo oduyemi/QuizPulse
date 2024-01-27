@@ -128,7 +128,7 @@ Describe the logic for scoring quizzes in this section.
 
 #### Database Schema
 
-Provide details about the MongoDB database schema used for storing quiz questions and user scores.
+MongoDB
 
 #### Authentication
 
