@@ -1,4 +1,4 @@
-# quiz_pulse
+# QuizPulse
 
 ## Table of Contents
 
