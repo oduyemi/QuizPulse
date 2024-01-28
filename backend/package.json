@@ -1,0 +1,43 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend server for QuizPulse",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oduyemi/QuizPulse.git"
+  },
+  "keywords": [
+    "quiz",
+    "course",
+    "e-learning"
+  ],
+  "author": "Opeyemi Oduyemi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oduyemi/QuizPulse/issues"
+  },
+  "homepage": "https://github.com/oduyemi/QuizPulse#readme",
+  "dependencies": {
+    "@types/mongoose": "^5.11.97",
+    "cloudinary": "^1.41.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "http-proxy-middleware": "^2.0.6",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.1.1",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-typescript": "^7.23.3",
+    "@babel/register": "^7.23.7",
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^4.17.21"
+  }
+}
