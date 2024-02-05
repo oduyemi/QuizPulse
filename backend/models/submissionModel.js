@@ -12,7 +12,7 @@ const submissionSchema = new mongoose_1.default.Schema({
     },
     quizId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Quiz',
+        ref: 'Courses',
         required: true,
     },
     answers: {

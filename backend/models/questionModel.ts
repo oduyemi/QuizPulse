@@ -1,11 +1,13 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IQuestion extends Document {
-  questionText: string;
+  question_id: mongoose.Types.ObjectId;
+  question_text: string;
   options: string[];
-  correctAnswer: string;
-  difficultyLevel: 'easy' | 'medium' | 'hard';
-  category: string;
+  correct_answer: string;
+  difficulty_level: "easy" | "medium" | "hard";
+  course_id: mongoose.Types.ObjectId
+  category: mongoose.Types.ObjectId;
 }
 
 const questionSchema: Schema = new mongoose.Schema({
@@ -23,15 +25,16 @@ const questionSchema: Schema = new mongoose.Schema({
   },
   difficultyLevel: {
     type: String,
-    enum: ['easy', 'medium', 'hard'],
+    enum: ["easy", "medium", "hard"],
     required: true,
   },
   category: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Categories', 
     required: true,
   },
 });
 
-const Question = mongoose.model<IQuestion>('Question', questionSchema);
+const Question = mongoose.model<IQuestion>("Question", questionSchema);
 
 export default Question;

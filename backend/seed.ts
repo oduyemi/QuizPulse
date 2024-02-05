@@ -1,19 +1,51 @@
 import { MongoClient, ObjectId } from "mongodb";
+import mongoose from "mongoose";
 import { Collection } from "mongodb";
-require('dotenv').config();
+
+require("dotenv").config();
+
+const User = require("./models/userModel");
+const Admin = require("./models/adminModel");
+const Quiz = require("./models/quizModel");
+const Question = require("./models/questionModel");
+const Courses = require("./models/courseModel");
+const Submission = require("./models/submissionModel");
+
 
 interface Course {
-  _id: ObjectId;
+  category_id: ObjectId; 
   name: string;
   description: string;
-  category: string;
   img: string;
   quizzes: any[];
 }
 
-async function main() {
+
+const seedDatabase = async () => {
   const url:string = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
   const client = new MongoClient(url);
+
+  // Models
+  const user = new User();
+  await user.save();
+
+  const admin = new Admin();
+  await admin.save();
+
+  const quiz = new Quiz();
+  await quiz.save();
+
+  const question = new Question();
+  await question.save();
+
+  const courses = new Courses();
+  await courses.save();
+
+  const submission = new Submission();
+  await submission.save();
+
+  console.log("Models created successfully!");
+  mongoose.connection.close(); 
 
   try {
     await client.connect();
@@ -42,24 +74,26 @@ async function main() {
 
       for (let i = 1; i <= courses.length; i++) {
         const newCourse: Course = {
-          _id: new ObjectId(),
+          category_id: new ObjectId(),
           name: `${category} - ${courses[i - 1]}`,
           description: `Description for ${category} - ${courses[i - 1]}`,
-          category: category,
           img: `image-${i}.jpg`,
           quizzes: [],
         };
-
+      
         await courseCategory.insertOne(newCourse);
       }
     }
 
-    console.log("Data inserted successfully!");
+    console.log("Course categories created successfully!");
   } catch (e) {
     console.error(e);
   } finally {
     await client.close();
   }
-}
 
-main();
+};
+
+seedDatabase();
+
+

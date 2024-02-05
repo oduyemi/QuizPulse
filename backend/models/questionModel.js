@@ -19,13 +19,14 @@ const questionSchema = new mongoose_1.default.Schema({
     },
     difficultyLevel: {
         type: String,
-        enum: ['easy', 'medium', 'hard'],
+        enum: ["easy", "medium", "hard"],
         required: true,
     },
     category: {
-        type: String,
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: 'Categories',
         required: true,
     },
 });
-const Question = mongoose_1.default.model('Question', questionSchema);
+const Question = mongoose_1.default.model("Question", questionSchema);
 exports.default = Question;

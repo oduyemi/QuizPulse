@@ -1,9 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ICourse extends Document {
+  course_id: mongoose.Types.ObjectId;
   name: string;
   description: string;
-  category: string;
+  category_id: mongoose.Types.ObjectId;
   img: string;
   quizzes: mongoose.Types.ObjectId[];
 }
@@ -17,8 +18,9 @@ const courseSchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  category: {
-    type: String,
+  category_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Categories', 
     required: true,
   },
   img: {
@@ -33,7 +35,7 @@ const courseSchema: Schema = new mongoose.Schema({
 
 const Courses = mongoose.model<ICourse>('Courses', courseSchema);
 
-export default Courses;
+export default Courses ; 
 
 
 

@@ -26,7 +26,6 @@ app.use("/send", sendRouter);
 app.use("/update", updateRouter);
 app.use("/erase", eraseRouter);
 
-// Use the exported MongoDB connection from db/index.ts
 db.on("error", console.error.bind(console, "Mongodb Connection Error:"));
 
 app.use("/api", createProxyMiddleware({

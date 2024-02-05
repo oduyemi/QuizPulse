@@ -1,8 +1,9 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ISubmission extends Document {
+  Submission_id: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
-  quizId: mongoose.Types.ObjectId;
+  course: mongoose.Types.ObjectId;
   answers: string[];
   score: number;
 }
@@ -15,7 +16,7 @@ const submissionSchema: Schema = new mongoose.Schema({
   },
   quizId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Quiz', 
+    ref: 'Courses', 
     required: true,
   },
   answers: {
