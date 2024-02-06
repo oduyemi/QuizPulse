@@ -24,29 +24,6 @@ interface Course {
 const seedDatabase = async () => {
   const url:string = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
   const client = new MongoClient(url);
-
-  // Models
-  const user = new User();
-  await user.save();
-
-  const admin = new Admin();
-  await admin.save();
-
-  const quiz = new Quiz();
-  await quiz.save();
-
-  const question = new Question();
-  await question.save();
-
-  const courses = new Courses();
-  await courses.save();
-
-  const submission = new Submission();
-  await submission.save();
-
-  console.log("Models created successfully!");
-  mongoose.connection.close(); 
-
   try {
     await client.connect();
     const courseCategory: Collection<Course> = client.db("quizpulsedb").collection("courses");

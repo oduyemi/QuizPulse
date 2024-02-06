@@ -4,6 +4,7 @@ export interface IAdmin extends Document {
   admin_id: mongoose.Types.ObjectId;
   name: string;
   email: string;
+  phone: string
   password: string;
 }
 
@@ -17,6 +18,10 @@ const adminSchema: Schema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  phone: {
+    type: String,
+    required: true,
+  },
   password: {
     type: String,
     required: true,
@@ -24,5 +29,6 @@ const adminSchema: Schema = new mongoose.Schema({
 });
 
 const Admin = mongoose.model<IAdmin>('Admin', adminSchema);
+
 
 export default Admin;
