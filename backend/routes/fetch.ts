@@ -1,12 +1,15 @@
 import express from 'express';
-const router = express.Router();
 import Courses, { ICourse } from "../models/courseModel.js";
+import CourseCategory, { ICategory} from "../models/courseCategoryModel.js";
 import Question, { IQuestion } from "../models/questionModel.js";
 import User, { IUser } from "../models/userModel.js";
 import Admin, { IAdmin } from "../models/adminModel.js";
 import Submission, { ISubmission} from "../models/submissionModel.js";
+import Categories from '../models/courseCategoryModel.js';
 
 
+const router = express.Router();
+const db = require("../db/index");
 
 router.get("/", (req, res) => {
 res.json({ message: "Welcome to QuizPulse!" });
@@ -45,9 +48,9 @@ router.get("/courses/:courseId", async (req, res) => {
 });
  
 
-router.get("/courses/course-categories", async (req, res) => {
+router.get("/courses/course/course-categories", async (req, res) => {
     try {
-      const categories: string[] = await Courses.distinct("category");
+      const categories: ICategory[] = await Categories.find();
   
       if (categories.length === 0) {
         res.status(404).json({ Message: "No course categories available" });
@@ -65,15 +68,15 @@ router.get("/courses/course-categories/:categoryId", async (req, res) => {
     try {
         const categoryId = req.params.categoryId;
     
-        const courses: ICourse[] = await Courses.find({ category: categoryId });
+        const category: ICategory[] = await Categories.find({ category: categoryId });
     
-        if (courses.length === 0) {
-        res.status(404).json({ Message: `No courses available for category: ${categoryId}` });
+        if (category.length === 0) {
+        res.status(404).json({ Message: `No courses available for course category: ${categoryId}` });
         } else {
-        res.json({ data: courses });
+        res.json({ data: category });
         }
     } catch (error) {
-        console.error("Error fetching courses from the database", error);
+        console.error("Error fetching course category from the database", error);
         res.status(500).json({ Message: "Internal Server Error" });
     }
 });
@@ -209,4 +212,4 @@ router.get("/results/:resultId", async (req, res) => {
 });
 
 
-export default router
+export default router;

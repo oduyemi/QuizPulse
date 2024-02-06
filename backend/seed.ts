@@ -1,76 +1,65 @@
 import { MongoClient, ObjectId } from "mongodb";
-import mongoose from "mongoose";
 import { Collection } from "mongodb";
+import Categories from "./models/courseCategoryModel.js";
+import Courses from "./models/courseModel.js";
 
 require("dotenv").config();
 
-const User = require("./models/userModel");
-const Admin = require("./models/adminModel");
-const Quiz = require("./models/quizModel");
-const Question = require("./models/questionModel");
-const Courses = require("./models/courseModel");
-const Submission = require("./models/submissionModel");
-
-
-interface Course {
-  category_id: ObjectId; 
-  name: string;
-  description: string;
-  img: string;
-  quizzes: any[];
-}
-
-
 const seedDatabase = async () => {
-  const url:string = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
+  const url: string = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
   const client = new MongoClient(url);
   try {
     await client.connect();
-    const courseCategory: Collection<Course> = client.db("quizpulsedb").collection("courses");
+    const courseCategories: Collection<any> = client.db("quizpulsedb").collection("categories");
+    const courses: Collection<any> = client.db("quizpulsedb").collection("courses");
 
-    await courseCategory.drop();
+    await courseCategories.deleteMany({});
+    await courses.deleteMany({});
 
-    const categories = ["Tech", "Sales and Marketing", "Science"];
+    const categories = [
+      { name: "Tech", description: "Technology-related courses", img: "tech.jpg" },
+      { name: "Sales and Marketing", description: "Sales and marketing courses", img: "sales.jpg" },
+      { name: "Science", description: "Science courses", img: "science.jpg" }
+    ];
 
     for (const category of categories) {
-      let courses: string[] = [];
+      const newCategory = await Categories.create(category);
 
-      switch (category) {
+      let courseNames: string[] = [];
+
+      switch (category.name) {
         case "Tech":
-          courses = ["Data Analysis", "Product Management", "Web Design"];
+          courseNames = ["Data Analysis", "Product Management", "Web Design"];
           break;
         case "Sales and Marketing":
-          courses = ["Advertising", "Marketing Management", "Digital Marketing"];
+          courseNames = ["Advertising", "Marketing Management", "Digital Marketing"];
           break;
         case "Science":
-          courses = ["Earth Science", "Botany", "Chemistry"];
+          courseNames = ["Earth Science", "Botany", "Chemistry"];
           break;
         default:
           break;
       }
 
-      for (let i = 1; i <= courses.length; i++) {
-        const newCourse: Course = {
-          category_id: new ObjectId(),
-          name: `${category} - ${courses[i - 1]}`,
-          description: `Description for ${category} - ${courses[i - 1]}`,
-          img: `image-${i}.jpg`,
-          quizzes: [],
+      for (const courseName of courseNames) {
+        const newCourse = {
+          name: courseName,
+          description: `Description for ${courseName}`,
+          category_id: newCategory._id,
+          img: `${category.name.toLowerCase().replace(" ", "-")}.jpg`,
+          quizzes: []
         };
-      
-        await courseCategory.insertOne(newCourse);
+
+        await Courses.create(newCourse);
       }
     }
 
-    console.log("Course categories created successfully!");
+    console.log("Course categories and courses created successfully!");
   } catch (e) {
     console.error(e);
   } finally {
     await client.close();
   }
-
 };
 
 seedDatabase();
-
-

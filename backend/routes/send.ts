@@ -1,23 +1,21 @@
 import express, { Request, Response } from "express";
 import twilio from "twilio";
 import { hash, compare } from "bcrypt";
-import { promisify } from "util";
 import User from "../models/userModel.js";
 import Courses, { ICourse } from "../models/courseModel.js";
 import Question, { IQuestion } from "../models/questionModel.js";
+import Quiz, { IQuiz } from "../models/quizModel.js";
 import Admin from "../models/adminModel.js";
 import Submission, { ISubmission} from "../models/submissionModel.js";
-
 
 const router = express.Router();
 const { accountSid, authToken } = process.env;
 const client = twilio(accountSid, authToken);
 const db = require("../db/index");
 
+
 require("dotenv").config();
 
-
-const seed = require("SeedDatabase")
 
 interface UserSession {
     userID: number; 
@@ -48,20 +46,6 @@ interface UserSession {
   
 const PIN_EXPIRY_TIME = 10 * 60 * 1000;
 
-const hashPassword = async (password: string) => {
-    const hashedPassword = await hash(password, 10); // Using bcrypt for hashing
-    return hashedPassword;
-};
-
-
-async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
-  try {
-      const isMatch = await compare(password, hashedPassword);
-      return isMatch;
-  } catch (error) {
-      throw new Error("Error verifying password");
-  }
-}
 
   
 const sendSMSVerification = async (pin: string, phoneNumber: string) => {
@@ -286,7 +270,7 @@ router.post("/admin/login", async (req: Request, res: Response) => {
       }
 
       const adminSession = {
-        userID: admin._id,
+        adminID: admin._id,
         name: admin.name,
         email: admin.email,
         phone: admin.phone,
@@ -319,11 +303,6 @@ router.post("/admin/logout", (req, res) => {
     res.json({ message: "register here!" });
     });
 
- 
-router.post("/courses/course-categories/category", (req, res) => {
-    res.json({ message: "Add a new course category" });
-    });
-
   
 router.post("/courses/course", async (req: Request, res: Response) => {
   try{
@@ -354,8 +333,9 @@ router.post("/courses/course", async (req: Request, res: Response) => {
 });
 
 
-router.post("/courses/course-category", async (req: Request, res: Response) => {
+router.post("/courses/course-categories/category", async (req: Request, res: Response) => {
   try {
+    const seed = require("SeedDatabase")
       await seed;
 
       return res.status(201).json({ message: "Course categories created successfully!" });
@@ -405,6 +385,29 @@ router.post("/questions/question", async (req: Request, res: Response) => {
 });
 
 
+router.post("/quizzes", async (req: Request, res: Response) => {
+  try {
+      const { questions, submissions } = req.body;
+      
+      // New quiz instance
+      const newQuiz: IQuiz = new Quiz({
+          questions,
+          submissions,
+      });
+
+      await newQuiz.save();
+
+      return res.status(201).json({
+          message: "Quiz created successfully",
+          quiz: newQuiz,
+      });
+  } catch (error) {
+      console.error("Error creating quiz:", error);
+      return res.status(500).json({ message: "Error creating quiz" });
+  }
+});
+
+
 router.post("/submission", async (req: Request, res: Response) => {
   try {
     const { userId, courseId, answers } = req.body;
@@ -435,4 +438,4 @@ router.post("/submission", async (req: Request, res: Response) => {
 
 
 
-export default router
+export default router;

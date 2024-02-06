@@ -8,50 +8,56 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_1 = require("mongodb");
+const courseCategoryModel_js_1 = __importDefault(require("./models/courseCategoryModel.js"));
+const courseModel_js_1 = __importDefault(require("./models/courseModel.js"));
 require("dotenv").config();
-const User = require("./models/userModel");
-const Admin = require("./models/adminModel");
-const Quiz = require("./models/quizModel");
-const Question = require("./models/questionModel");
-const Courses = require("./models/courseModel");
-const Submission = require("./models/submissionModel");
 const seedDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     const url = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
     const client = new mongodb_1.MongoClient(url);
     try {
         yield client.connect();
-        const courseCategory = client.db("quizpulsedb").collection("courses");
-        yield courseCategory.drop();
-        const categories = ["Tech", "Sales and Marketing", "Science"];
+        const courseCategories = client.db("quizpulsedb").collection("categories");
+        const courses = client.db("quizpulsedb").collection("courses");
+        yield courseCategories.deleteMany({});
+        yield courses.deleteMany({});
+        const categories = [
+            { name: "Tech", description: "Technology-related courses", img: "tech.jpg" },
+            { name: "Sales and Marketing", description: "Sales and marketing courses", img: "sales.jpg" },
+            { name: "Science", description: "Science courses", img: "science.jpg" }
+        ];
         for (const category of categories) {
-            let courses = [];
-            switch (category) {
+            const newCategory = yield courseCategoryModel_js_1.default.create(category);
+            let courseNames = [];
+            switch (category.name) {
                 case "Tech":
-                    courses = ["Data Analysis", "Product Management", "Web Design"];
+                    courseNames = ["Data Analysis", "Product Management", "Web Design"];
                     break;
                 case "Sales and Marketing":
-                    courses = ["Advertising", "Marketing Management", "Digital Marketing"];
+                    courseNames = ["Advertising", "Marketing Management", "Digital Marketing"];
                     break;
                 case "Science":
-                    courses = ["Earth Science", "Botany", "Chemistry"];
+                    courseNames = ["Earth Science", "Botany", "Chemistry"];
                     break;
                 default:
                     break;
             }
-            for (let i = 1; i <= courses.length; i++) {
+            for (const courseName of courseNames) {
                 const newCourse = {
-                    category_id: new mongodb_1.ObjectId(),
-                    name: `${category} - ${courses[i - 1]}`,
-                    description: `Description for ${category} - ${courses[i - 1]}`,
-                    img: `image-${i}.jpg`,
-                    quizzes: [],
+                    name: courseName,
+                    description: `Description for ${courseName}`,
+                    category_id: newCategory._id,
+                    img: `${category.name.toLowerCase().replace(" ", "-")}.jpg`,
+                    quizzes: []
                 };
-                yield courseCategory.insertOne(newCourse);
+                yield courseModel_js_1.default.create(newCourse);
             }
         }
-        console.log("Course categories created successfully!");
+        console.log("Course categories and courses created successfully!");
     }
     catch (e) {
         console.error(e);

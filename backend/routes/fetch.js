@@ -13,12 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const router = express_1.default.Router();
 const courseModel_js_1 = __importDefault(require("../models/courseModel.js"));
 const questionModel_js_1 = __importDefault(require("../models/questionModel.js"));
 const userModel_js_1 = __importDefault(require("../models/userModel.js"));
 const adminModel_js_1 = __importDefault(require("../models/adminModel.js"));
 const submissionModel_js_1 = __importDefault(require("../models/submissionModel.js"));
+const courseCategoryModel_js_1 = __importDefault(require("../models/courseCategoryModel.js"));
+const router = express_1.default.Router();
+const db = require("../db/index");
 router.get("/", (req, res) => {
     res.json({ message: "Welcome to QuizPulse!" });
 });
@@ -53,9 +55,9 @@ router.get("/courses/:courseId", (req, res) => __awaiter(void 0, void 0, void 0,
         res.status(500).json({ Message: "Internal Server Error" });
     }
 }));
-router.get("/courses/course-categories", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/courses/course/course-categories", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const categories = yield courseModel_js_1.default.distinct("category");
+        const categories = yield courseCategoryModel_js_1.default.find();
         if (categories.length === 0) {
             res.status(404).json({ Message: "No course categories available" });
         }
@@ -71,16 +73,16 @@ router.get("/courses/course-categories", (req, res) => __awaiter(void 0, void 0,
 router.get("/courses/course-categories/:categoryId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const categoryId = req.params.categoryId;
-        const courses = yield courseModel_js_1.default.find({ category: categoryId });
-        if (courses.length === 0) {
-            res.status(404).json({ Message: `No courses available for category: ${categoryId}` });
+        const category = yield courseCategoryModel_js_1.default.find({ category: categoryId });
+        if (category.length === 0) {
+            res.status(404).json({ Message: `No courses available for course category: ${categoryId}` });
         }
         else {
-            res.json({ data: courses });
+            res.json({ data: category });
         }
     }
     catch (error) {
-        console.error("Error fetching courses from the database", error);
+        console.error("Error fetching course category from the database", error);
         res.status(500).json({ Message: "Internal Server Error" });
     }
 }));

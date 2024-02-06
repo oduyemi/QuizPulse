@@ -7,7 +7,6 @@ import fetchRouter from "./routes/fetch";
 import sendRouter from "./routes/send";
 import updateRouter from "./routes/update";
 import eraseRouter from "./routes/erase";
-import mongoose from "mongoose";
 import db from "./db"; 
 
 const app: Application = express();
