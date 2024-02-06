@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import twilio from "twilio";
 import { hash, compare } from "bcrypt";
 import { promisify } from "util";
-import User, { IUser } from "../models/userModel.js";
+import User from "../models/userModel.js";
 import Courses, { ICourse } from "../models/courseModel.js";
 import Question, { IQuestion } from "../models/questionModel.js";
 import Admin from "../models/adminModel.js";
@@ -401,6 +401,35 @@ router.post("/questions/question", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error creating question:", error);
     return res.status(500).json({ message: "Error creating question" });
+  }
+});
+
+
+router.post("/submission", async (req: Request, res: Response) => {
+  try {
+    const { userId, courseId, answers } = req.body;
+
+    if (![userId, courseId, answers].every(field => field)) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // New  Submission instance 
+    const newSubmission: ISubmission = new Submission({
+      userId,
+      courseId,
+      answers,
+      score: 0,
+    });
+
+    await newSubmission.save();
+
+    return res.status(201).json({
+      message: "Submission created successfully",
+      submission: newSubmission,
+    });
+  } catch (error) {
+    console.error("Error creating submission:", error);
+    return res.status(500).json({ message: "Error creating submission" });
   }
 });
 
