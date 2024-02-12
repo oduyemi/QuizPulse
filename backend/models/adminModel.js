@@ -22,6 +22,10 @@ const adminSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    salt: {
+        type: String,
+        required: true,
+    },
 });
 const Admin = mongoose_1.default.model('Admin', adminSchema);
 exports.default = Admin;

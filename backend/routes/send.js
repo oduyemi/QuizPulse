@@ -41,11 +41,11 @@ const sendSMSVerification = (pin, phoneNumber) => __awaiter(void 0, void 0, void
         return false;
     }
 });
-router.post("/sms-status", (req, res) => {
+router.post("/sms-status", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { MessageStatus, MessageSid } = req.body;
     console.log(`Message SID: ${MessageSid}, Status: ${MessageStatus}`);
     res.sendStatus(200);
-});
+}));
 router.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, phone, password, confirmPassword } = req.body;

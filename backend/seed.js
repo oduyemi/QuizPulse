@@ -8,56 +8,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_1 = require("mongodb");
-const courseCategoryModel_js_1 = __importDefault(require("./models/courseCategoryModel.js"));
-const courseModel_js_1 = __importDefault(require("./models/courseModel.js"));
 require("dotenv").config();
 const seedDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     const url = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
     const client = new mongodb_1.MongoClient(url);
     try {
         yield client.connect();
-        const courseCategories = client.db("quizpulsedb").collection("categories");
-        const courses = client.db("quizpulsedb").collection("courses");
-        yield courseCategories.deleteMany({});
-        yield courses.deleteMany({});
+        const courseCategory = client.db("quizpulsedb").collection("categories");
+        yield courseCategory.drop();
         const categories = [
-            { name: "Tech", description: "Technology-related courses", img: "tech.jpg" },
-            { name: "Sales and Marketing", description: "Sales and marketing courses", img: "sales.jpg" },
-            { name: "Science", description: "Science courses", img: "science.jpg" }
+            { name: "Tech", description: "Technology-related courses", img: "https://res.cloudinary.com/dymd1jkbl/image/upload/v1691953768/quizpulse/categories/tech.jpg" },
+            { name: "Sales and Marketing", description: "Sales and marketing courses", img: "https://res.cloudinary.com/dymd1jkbl/image/upload/v1691953768/quizpulse/categories/science.jpg" },
+            { name: "Science", description: "Science courses", img: "https://res.cloudinary.com/dymd1jkbl/image/upload/v1691953768/quizpulse/categories/science.jpg" }
         ];
         for (const category of categories) {
-            const newCategory = yield courseCategoryModel_js_1.default.create(category);
-            let courseNames = [];
-            switch (category.name) {
-                case "Tech":
-                    courseNames = ["Data Analysis", "Product Management", "Web Design"];
-                    break;
-                case "Sales and Marketing":
-                    courseNames = ["Advertising", "Marketing Management", "Digital Marketing"];
-                    break;
-                case "Science":
-                    courseNames = ["Earth Science", "Botany", "Chemistry"];
-                    break;
-                default:
-                    break;
-            }
-            for (const courseName of courseNames) {
-                const newCourse = {
-                    name: courseName,
-                    description: `Description for ${courseName}`,
-                    category_id: newCategory._id,
-                    img: `${category.name.toLowerCase().replace(" ", "-")}.jpg`,
-                    quizzes: []
-                };
-                yield courseModel_js_1.default.create(newCourse);
-            }
+            yield courseCategory.insertOne(category);
         }
-        console.log("Course categories and courses created successfully!");
+        console.log("Course categories created successfully!");
     }
     catch (e) {
         console.error(e);
@@ -66,4 +35,3 @@ const seedDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
         yield client.close();
     }
 });
-seedDatabase();

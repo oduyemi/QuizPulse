@@ -62,7 +62,7 @@ const sendSMSVerification = async (pin: string, phoneNumber: string) => {
     }
 };
   
-router.post("/sms-status", (req, res) => {
+router.post("/sms-status", async (req: Request, res: Response) => {
     const { MessageStatus, MessageSid } = req.body;
     console.log(`Message SID: ${MessageSid}, Status: ${MessageStatus}`);
     res.sendStatus(200);

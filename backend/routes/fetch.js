@@ -14,11 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const courseModel_js_1 = __importDefault(require("../models/courseModel.js"));
+const courseCategoryModel_js_1 = __importDefault(require("../models/courseCategoryModel.js"));
 const questionModel_js_1 = __importDefault(require("../models/questionModel.js"));
 const userModel_js_1 = __importDefault(require("../models/userModel.js"));
 const adminModel_js_1 = __importDefault(require("../models/adminModel.js"));
 const submissionModel_js_1 = __importDefault(require("../models/submissionModel.js"));
-const courseCategoryModel_js_1 = __importDefault(require("../models/courseCategoryModel.js"));
+const courseCategoryModel_js_2 = __importDefault(require("../models/courseCategoryModel.js"));
 const router = express_1.default.Router();
 const db = require("../db/index");
 router.get("/", (req, res) => {
@@ -57,7 +58,7 @@ router.get("/courses/:courseId", (req, res) => __awaiter(void 0, void 0, void 0,
 }));
 router.get("/courses/course/course-categories", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const categories = yield courseCategoryModel_js_1.default.find();
+        const categories = yield courseCategoryModel_js_2.default.find();
         if (categories.length === 0) {
             res.status(404).json({ Message: "No course categories available" });
         }

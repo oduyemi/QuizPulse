@@ -1,22 +1,22 @@
-import express from 'express';
+import express, {Request, Response } from "express";
 import Courses, { ICourse } from "../models/courseModel.js";
 import CourseCategory, { ICategory} from "../models/courseCategoryModel.js";
 import Question, { IQuestion } from "../models/questionModel.js";
 import User, { IUser } from "../models/userModel.js";
 import Admin, { IAdmin } from "../models/adminModel.js";
 import Submission, { ISubmission} from "../models/submissionModel.js";
-import Categories from '../models/courseCategoryModel.js';
+import Categories from "../models/courseCategoryModel.js";
 
 
 const router = express.Router();
 const db = require("../db/index");
 
-router.get("/", (req, res) => {
+router.get("/", (req: Request, res: Response) => {
 res.json({ message: "Welcome to QuizPulse!" });
 });
 
 
-router.get("/courses", async (req, res) => {
+router.get("/courses", async (req: Request, res: Response) => {
     try {
       const courses: ICourse[] = await Courses.find();
       if (courses.length === 0) {
@@ -31,7 +31,7 @@ router.get("/courses", async (req, res) => {
 });
     
 
-router.get("/courses/:courseId", async (req, res) => {
+router.get("/courses/:courseId", async (req: Request, res: Response) => {
     try {
         const courseId = req.params.courseId;
         const course: ICourse | null = await Courses.findById(courseId);
@@ -48,7 +48,7 @@ router.get("/courses/:courseId", async (req, res) => {
 });
  
 
-router.get("/courses/course/course-categories", async (req, res) => {
+router.get("/courses/course/course-categories", async (req: Request, res: Response) => {
     try {
       const categories: ICategory[] = await Categories.find();
   
@@ -64,11 +64,11 @@ router.get("/courses/course/course-categories", async (req, res) => {
 });
   
 
-router.get("/courses/course-categories/:categoryId", async (req, res) => {
+router.get("/courses/course-categories/:categoryId", async (req: Request, res: Response) => {
     try {
         const categoryId = req.params.categoryId;
     
-        const category: ICategory[] = await Categories.find({ category: categoryId });
+        const category: ICategory[] = await CourseCategory.find({ category: categoryId });
     
         if (category.length === 0) {
         res.status(404).json({ Message: `No courses available for course category: ${categoryId}` });
@@ -82,7 +82,7 @@ router.get("/courses/course-categories/:categoryId", async (req, res) => {
 });
 
  
-router.get("/questions", async (req, res) => {
+router.get("/questions", async (req: Request, res: Response) => {
     try {
         const questions: ICourse[] = await Question.find();
         if (questions.length === 0) {
@@ -97,7 +97,7 @@ router.get("/questions", async (req, res) => {
 });
  
 
-router.get("/questions/:questionId", async (req, res) => {
+router.get("/questions/:questionId", async (req: Request, res: Response) => {
     try {
         const questionId = req.params.questionId;
         const question: IQuestion | null = await Question.findById(questionId);
@@ -114,7 +114,7 @@ router.get("/questions/:questionId", async (req, res) => {
 });
 
  
-router.get("/users", async (req, res) => {
+router.get("/users", async (req: Request, res: Response) => {
     try {
         const users: IUser[] = await User.find();
         if (users.length === 0) {
@@ -129,7 +129,7 @@ router.get("/users", async (req, res) => {
 });
 
  
-router.get("/users/:userId", async (req, res) => {
+router.get("/users/:userId", async (req: Request, res: Response) => {
     try {
         const userId = req.params.userId;
         const user: IUser | null = await User.findById(userId);
@@ -148,7 +148,7 @@ router.get("/users/:userId", async (req, res) => {
 
 
      
-router.get("/admins", async (req, res) => {
+router.get("/admins", async (req: Request, res: Response) => {
     try {
         const admins: IAdmin[] = await Admin.find();
         if (admins.length === 0) {
@@ -163,7 +163,7 @@ router.get("/admins", async (req, res) => {
 });
 
  
-router.get("/admins/:adminId", async (req, res) => {
+router.get("/admins/:adminId", async (req: Request, res: Response) => {
     try {
         const adminId = req.params.adminId;
         const admin: IAdmin | null = await Admin.findById(adminId);
@@ -179,7 +179,7 @@ router.get("/admins/:adminId", async (req, res) => {
     }
 });
       
-router.get("/results", async (req, res) => {
+router.get("/results", async (req: Request, res: Response) => {
     try {
         const results: ISubmission[] = await Submission.find();
         if (results.length === 0) {
@@ -195,7 +195,7 @@ router.get("/results", async (req, res) => {
 });
 
     
-router.get("/results/:resultId", async (req, res) => {
+router.get("/results/:resultId", async (req: Request, res: Response) => {
     try {
         const resultId = req.params.resultId;
         const result: ISubmission | null = await Submission.findById(resultId);

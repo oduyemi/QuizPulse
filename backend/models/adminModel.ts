@@ -6,6 +6,7 @@ export interface IAdmin extends Document {
   email: string;
   phone: string
   password: string;
+  salt: string;
 }
 
 const adminSchema: Schema = new mongoose.Schema({
@@ -23,6 +24,10 @@ const adminSchema: Schema = new mongoose.Schema({
     required: true,
   },
   password: {
+    type: String,
+    required: true,
+  },
+  salt: {
     type: String,
     required: true,
   },

@@ -6,6 +6,7 @@ export interface IUser extends Document {
   email: string;
   phone: string;
   password: string;
+  salt: string;
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -23,6 +24,10 @@ const userSchema: Schema = new mongoose.Schema({
     required: true,
   },
   password: {
+    type: String,
+    required: true,
+  },
+  salt: {
     type: String,
     required: true,
   },
